@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     #internal
+    "accounts",
 ]
 
 MIDDLEWARE = [
@@ -168,3 +169,4 @@ CORS_ALLOWED_ORIGINS = [
 
 
 FILE_UPLOAD_PERMISSIONS = 0o640
+AUTH_USER_MODEL = 'accounts.UserAccount'
