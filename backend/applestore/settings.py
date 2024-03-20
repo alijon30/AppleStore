@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 from pathlib import Path
-
+from datetime import timedelta
 dotenv_path = os.path.join(Path(__file__).resolve().parent.parent, '.env')
 load_dotenv(dotenv_path)
 
@@ -89,15 +89,28 @@ WSGI_APPLICATION = "applestore.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
+    "default": {},
+    "accounts": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PASSWORD"),
-        "HOST": os.getenv("DB_HOST"),
-        "PORT": os.getenv("DB_PORT"),
+        "NAME": os.getenv("DB1_NAME"),
+        "USER": os.getenv("DB1_USER"),
+        "PASSWORD": os.getenv("DB1_PASSWORD"),
+        "HOST": os.getenv("DB1_HOST"),
+        "PORT": os.getenv("DB1_PORT"),
+    },
+    "products": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB2_NAME"),
+        "USER": os.getenv("DB2_USER"),
+        "PASSWORD": os.getenv("DB2_PASSWORD"),
+        "HOST": os.getenv("DB2_HOST"),
+        "PORT": os.getenv("DB2_PORT"),
     }
 }
+DATABASE_ROUTERS = [
+    'accounts.router.AuthRouter',
+]
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv("EMAIL_HOST")
@@ -161,6 +174,15 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication'
     ],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'AUTH_HEADER_TYPES': ('Bearer', ),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken', )
 }
 
 CORS_ALLOWED_ORIGINS = [
